@@ -14,4 +14,5 @@ You just need [nodejs](https://nodejs.org/en/) and execute the folowing commands
 git clone https://github.com/misaamanedu123456789/nhdown
 cd nhdown
 npm i
+npm i --save-dev @types/node
 ```

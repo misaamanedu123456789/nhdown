@@ -42,12 +42,7 @@ const fetchinfo = (url: String) => {
 			const path = res['title']; 
 			
 			fs.access(path, (error) => { 
-			
-			// To check if the given directory  
-			// already exists or not 
 			if (error) { 
-				// If current directory does not exist 
-				// then create it 
 				fs.mkdir(path, (error) => { 
 				if (error) { 
 					console.log(error); 
@@ -56,7 +51,7 @@ const fetchinfo = (url: String) => {
 				} 
 				}); 
 			} else { 
-				console.log("Given Directory already exists !!"); 
+				console.log("You alredy downloaded this hentai"); 
 				getImgs(res['dataurl'],res['pages'],res['title'])
 			} 
 			}); 
@@ -66,5 +61,5 @@ const fetchinfo = (url: String) => {
 }
 
 
-let urlbase = prom('quelle url : ')
+let urlbase = prom('url (just accept url like "https://nhentai.to/g/328483") : ')
 const nhinfo = fetchinfo(urlbase)
