@@ -108,11 +108,7 @@ var fetchinfo = function (url) {
             var fs = require("fs");
             var path = res['title'];
             fs.access(path, function (error) {
-                // To check if the given directory  
-                // already exists or not 
                 if (error) {
-                    // If current directory does not exist 
-                    // then create it 
                     fs.mkdir(path, function (error) {
                         if (error) {
                             console.log(error);
@@ -123,12 +119,12 @@ var fetchinfo = function (url) {
                     });
                 }
                 else {
-                    console.log("Given Directory already exists !!");
+                    console.log("You alredy downloaded this hentai");
                     getImgs(res['dataurl'], res['pages'], res['title']);
                 }
             });
         });
     });
 };
-var urlbase = prom('quelle url : ');
+var urlbase = prom('url (just accept url like "https://nhentai.to/g/328483") : ');
 var nhinfo = fetchinfo(urlbase);
