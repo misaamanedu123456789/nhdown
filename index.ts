@@ -5,18 +5,26 @@ const fs = require('fs')
 const request = require('request')
 const prom = require('prompt-sync')();
 const cheerio = require('cheerio')
-var exec = require('child_process').exec;
+var ProgressBar = require('progress');
 
 const getImgs = async (u:string,p:number,t:string)=>{
 	let nu = u.split('1')
 	let nnu = nu.slice(0,nu.length-1).join('1')
+
+	var bar = new ProgressBar('  downloading [:bar] :percent :etas image n°:img', {
+		complete: '=',
+		incomplete: ' ',
+		width: 40,
+		total: p
+	});
 	for (let i = 0; i < p; i++) {
 		let upage = nnu+String(i+1)+nu[nu.length-1]
 		const response = await fetch(upage);
 		const buffer = await response.buffer();
 		fs.writeFile(`./${t}/${String(i+1)+nu[nu.length-1]}`, buffer, () => 
-			console.log('Image n°'+String(i+1)+' downloaded !'));
-		}
+		bar.tick({'img':String(i++)})	
+		);
+	}
 }
 const fetchinfo = (url: String) => {
 	const selcttitle = '#info > h1'
@@ -37,7 +45,7 @@ const fetchinfo = (url: String) => {
 			if (errorl) throw errorl
 			const l = cheerio.load(bodyl)
 			res['dataurl'] = l(selcturlimgsatabase).attr('src')
-			console.log(res)
+			console.log(`Title: ${res['title']}\nPages: ${res['pages']}`)
 			const fs = require("fs"); 
 			const path = res['title']; 
 			

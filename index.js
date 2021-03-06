@@ -41,14 +41,20 @@ var fs = require('fs');
 var request = require('request');
 var prom = require('prompt-sync')();
 var cheerio = require('cheerio');
-var exec = require('child_process').exec;
+var ProgressBar = require('progress');
 var getImgs = function (u, p, t) { return __awaiter(void 0, void 0, void 0, function () {
-    var nu, nnu, _loop_1, i;
+    var nu, nnu, bar, _loop_1, out_i_1, i;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 nu = u.split('1');
                 nnu = nu.slice(0, nu.length - 1).join('1');
+                bar = new ProgressBar('  downloading [:bar] :percent :etas image n°:img', {
+                    complete: '=',
+                    incomplete: ' ',
+                    width: 40,
+                    total: p
+                });
                 _loop_1 = function (i) {
                     var upage, response, buffer;
                     return __generator(this, function (_b) {
@@ -62,8 +68,9 @@ var getImgs = function (u, p, t) { return __awaiter(void 0, void 0, void 0, func
                             case 2:
                                 buffer = _b.sent();
                                 fs.writeFile("./" + t + "/" + (String(i + 1) + nu[nu.length - 1]), buffer, function () {
-                                    return console.log('Image n°' + String(i + 1) + ' downloaded !');
+                                    return bar.tick({ 'img': String(i++) });
                                 });
+                                out_i_1 = i;
                                 return [2 /*return*/];
                         }
                     });
@@ -75,6 +82,7 @@ var getImgs = function (u, p, t) { return __awaiter(void 0, void 0, void 0, func
                 return [5 /*yield**/, _loop_1(i)];
             case 2:
                 _a.sent();
+                i = out_i_1;
                 _a.label = 3;
             case 3:
                 i++;
@@ -104,7 +112,7 @@ var fetchinfo = function (url) {
                 throw errorl;
             var l = cheerio.load(bodyl);
             res['dataurl'] = l(selcturlimgsatabase).attr('src');
-            console.log(res);
+            console.log("Title: " + res['title'] + "\nPages: " + res['pages']);
             var fs = require("fs");
             var path = res['title'];
             fs.access(path, function (error) {
