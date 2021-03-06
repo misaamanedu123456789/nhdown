@@ -8,7 +8,9 @@
     "url": "https://github.com/misaamanedu123456789/nhdown"
   },
   "scripts": {
-    "test": "tsc index.ts && node index.js"
+    "test": "tsc index.ts && node index.js",
+    "start": "node index.js",
+    "build": "tsc index.ts"
   },
   "author": "misaamane123456789",
   "license": "ISC",
