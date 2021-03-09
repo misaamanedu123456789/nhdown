@@ -4,7 +4,9 @@ nhdown is a simple nhentai downloader in typescript
 
 ## Usage
 
-You just need to execute the file `index.js` who has been complied from the file `index.ts`
+You just need to execute the file `index.js` who has been complied from the file `index.ts` with the command `node index.js`.
+
+If you want more information like the URL of the image server or more enter `node index.js -v`.
 
 ## Instalation 
 

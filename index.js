@@ -41,22 +41,26 @@ var fs = require('fs');
 var request = require('request');
 var prom = require('prompt-sync')();
 var cheerio = require('cheerio');
-var ProgressBar = require('progress');
+var verb = false;
+var verblog = function (mess) {
+    if (verb) {
+        console.log('[verbose] ' + mess);
+    }
+};
+for (var j = 0; j < process.argv.length; j++) {
+    if (process.argv[j] === "-v")
+        verb = true;
+}
+verblog('args : [' + String(process.argv) + ']');
 var getImgs = function (u, p, t) { return __awaiter(void 0, void 0, void 0, function () {
-    var nu, nnu, bar, _loop_1, out_i_1, i;
+    var nu, nnu, _loop_1, i;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 nu = u.split('1');
                 nnu = nu.slice(0, nu.length - 1).join('1');
-                bar = new ProgressBar('  downloading [:bar] :percent :etas image n°:img', {
-                    complete: '=',
-                    incomplete: ' ',
-                    width: 40,
-                    total: p
-                });
                 _loop_1 = function (i) {
-                    var upage, response, buffer;
+                    var upage, response, buffer, zero, m, prefix;
                     return __generator(this, function (_b) {
                         switch (_b.label) {
                             case 0:
@@ -64,13 +68,19 @@ var getImgs = function (u, p, t) { return __awaiter(void 0, void 0, void 0, func
                                 return [4 /*yield*/, fetch(upage)];
                             case 1:
                                 response = _b.sent();
+                                if (response['status'] === 404) {
+                                    console.error("image n\u00B0" + String(i + 1) + " isn't on the server");
+                                    return [2 /*return*/, "continue"];
+                                }
                                 return [4 /*yield*/, response.buffer()];
                             case 2:
                                 buffer = _b.sent();
-                                fs.writeFile("./" + t + "/" + (String(i + 1) + nu[nu.length - 1]), buffer, function () {
-                                    return bar.tick({ 'img': String(i++) });
-                                });
-                                out_i_1 = i;
+                                zero = '';
+                                for (m = 0; m < String(p).length - String(i + 1).length; m++) {
+                                    zero += '0';
+                                }
+                                prefix = "./" + t + "/" + (zero + String(i + 1) + nu[nu.length - 1]);
+                                fs.writeFile(prefix, buffer, function () { return console.log("image n\u00B0" + (i + 1) + "/" + p + " downloaded !"); });
                                 return [2 /*return*/];
                         }
                     });
@@ -82,7 +92,6 @@ var getImgs = function (u, p, t) { return __awaiter(void 0, void 0, void 0, func
                 return [5 /*yield**/, _loop_1(i)];
             case 2:
                 _a.sent();
-                i = out_i_1;
                 _a.label = 3;
             case 3:
                 i++;
@@ -106,6 +115,7 @@ var fetchinfo = function (url) {
         var $ = cheerio.load(body);
         res['title'] = $(selcttitle).text();
         res['pages'] = parseInt($(selctNpages).text().split(' ')[0]);
+        verblog('responce code : ' + response);
         var ok = 1;
         request(url + '/1', function (errorl, responsel, bodyl) {
             if (errorl)
@@ -113,6 +123,7 @@ var fetchinfo = function (url) {
             var l = cheerio.load(bodyl);
             res['dataurl'] = l(selcturlimgsatabase).attr('src');
             console.log("Title: " + res['title'] + "\nPages: " + res['pages']);
+            verblog('img database : ' + res['dataurl']);
             var fs = require("fs");
             var path = res['title'];
             fs.access(path, function (error) {
