@@ -61,20 +61,20 @@ var getImgs = function (u, p, t) { return __awaiter(void 0, void 0, void 0, func
                 nnu = nu.slice(0, nu.length - 1).join('1');
                 _loop_1 = function (i) {
                     var upage, response, buffer, zero, m, prefix;
-                    return __generator(this, function (_b) {
-                        switch (_b.label) {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
                             case 0:
                                 upage = nnu + String(i + 1) + nu[nu.length - 1];
                                 return [4 /*yield*/, fetch(upage)];
                             case 1:
-                                response = _b.sent();
+                                response = _a.sent();
                                 if (response['status'] === 404) {
                                     console.error("image n\u00B0" + String(i + 1) + " isn't on the server");
                                     return [2 /*return*/, "continue"];
                                 }
                                 return [4 /*yield*/, response.buffer()];
                             case 2:
-                                buffer = _b.sent();
+                                buffer = _a.sent();
                                 zero = '';
                                 for (m = 0; m < String(p).length - String(i + 1).length; m++) {
                                     zero += '0';
@@ -116,7 +116,6 @@ var fetchinfo = function (url) {
         res['title'] = $(selcttitle).text();
         res['pages'] = parseInt($(selctNpages).text().split(' ')[0]);
         verblog('responce code : ' + response);
-        var ok = 1;
         request(url + '/1', function (errorl, responsel, bodyl) {
             if (errorl)
                 throw errorl;
